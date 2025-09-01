@@ -11,6 +11,14 @@ import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
 import { Navbar } from './components/layout/Navbar';
 
+// Import new pages
+import ServicesPage from './pages/ServicesPage';
+import PricingPage from './pages/PricingPage';
+import AboutPage from './pages/AboutPage';
+import APIPage from './pages/APIPage';
+import FutureIntegrationPage from './pages/FutureIntegrationPage';
+
+
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
   in: { opacity: 1, y: 0 },
@@ -61,6 +69,24 @@ const AppContent: React.FC = () => {
             <Route path="/dashboard">
               <AnimatedRoute><DashboardPage /></AnimatedRoute>
             </Route>
+            
+            {/* Add routes for the new pages */}
+            <Route path="/services">
+              <AnimatedRoute><ServicesPage /></AnimatedRoute>
+            </Route>
+            <Route path="/pricing">
+              <AnimatedRoute><PricingPage /></AnimatedRoute>
+            </Route>
+            <Route path="/about">
+              <AnimatedRoute><AboutPage /></AnimatedRoute>
+            </Route>
+            <Route path="/api">
+              <AnimatedRoute><APIPage /></AnimatedRoute>
+            </Route>
+            <Route path="/future">
+              <AnimatedRoute><FutureIntegrationPage /></AnimatedRoute>
+            </Route>
+
             <Route>
               <AnimatedRoute><NotFoundPage /></AnimatedRoute>
             </Route>
