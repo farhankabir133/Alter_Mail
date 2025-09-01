@@ -10,9 +10,9 @@ const teamMembers = [
     imageUrl: 'https://i.pravatar.cc/150?u=jane',
   },
   {
-    name: 'John Smith',
+    name: 'Farhan Kabir',
     role: 'Lead Engineer',
-    imageUrl: 'https://i.pravatar.cc/150?u=john',
+    imageUrl: 'https://github.com/farhankabir133/Alter_Mail/blob/main/assets/fk_altmail.png',
   },
   {
     name: 'Emily White',
