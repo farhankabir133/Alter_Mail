@@ -2,104 +2,109 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Footer } from '../components/layout/Footer';
 
-const PageHero = ({ title, subtitle }: { title: React.ReactNode, subtitle: string }) => (
-  <section className="relative text-center py-20 lg:py-28 px-4 bg-[#0a0f1f]">
-    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.1)_0%,_rgba(10,15,31,0)_50%)]"></div>
-    <div className="relative z-10">
-      <motion.h1 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tighter"
-      >
-        {title}
-      </motion.h1>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-        className="max-w-2xl mx-auto text-lg text-slate-300"
-      >
-        {subtitle}
-      </motion.p>
-    </div>
-  </section>
-);
-
 const roadmapItems = [
-    {
-      quarter: 'Q4 2024',
-      title: 'Browser Extensions',
-      description: 'Generate disposable emails directly from your browser with extensions for Chrome, Firefox, and Safari for ultimate convenience.',
-      status: 'In Progress'
-    },
-    {
-      quarter: 'Q1 2025',
-      title: 'Native Mobile Apps',
-      description: 'Manage your mailboxes on the go with dedicated iOS and Android applications, featuring push notifications for new emails.',
-      status: 'Planned'
-    },
-    {
-      quarter: 'Q2 2025',
-      title: 'Encrypted Attachments',
-      description: 'Enhance security with end-to-end encryption for all email attachments sent and received through AltMail Pro accounts.',
-      status: 'Planned'
-    },
-    {
-      quarter: 'Q3 2025',
-      title: 'Team Collaboration',
-      description: 'Introduce features for business users, allowing teams to share and manage a pool of disposable email addresses for projects.',
-      status: 'Researching'
-    }
+  {
+    status: 'In Progress',
+    title: 'Browser Extension',
+    description: 'Generate temporary emails directly from your browser with one click. Autofill sign-up forms and manage inboxes without leaving the page.',
+    color: 'yellow',
+  },
+  {
+    status: 'Planned',
+    title: 'Mobile Apps (iOS & Android)',
+    description: 'Manage your temporary inboxes on the go. Get push notifications for new emails and enjoy a native mobile experience.',
+    color: 'blue',
+  },
+  {
+    status: 'Planned',
+    title: 'Encrypted Attachments',
+    description: 'Securely send and receive attachments with end-to-end encryption, ensuring your files remain private.',
+    color: 'blue',
+  },
+  {
+    status: 'Exploring',
+    title: 'Decentralized Identity Integration',
+    description: 'Link your mailboxes to a decentralized identity (DID) for even greater control and privacy over your online persona.',
+    color: 'gray',
+  },
+   {
+    status: 'Completed',
+    title: 'Developer API Launch',
+    description: 'Our REST API is now live, allowing developers to integrate AltMail into their own applications and workflows.',
+    color: 'green',
+  },
 ];
 
-const TimelineItem = ({ item, isLast }: { item: typeof roadmapItems[0], isLast: boolean }) => (
-  <div className="relative pl-8 sm:pl-32 py-6 group">
-    <div className={`absolute left-0 sm:left-16 top-0 h-full w-0.5 ${isLast ? 'bg-transparent' : 'bg-slate-200 dark:bg-slate-700'}`}></div>
-    <div className="absolute left-0 sm:left-16 top-6 w-4 h-4 rounded-full bg-brand-500 border-4 border-slate-50 dark:border-gray-900 transform group-hover:scale-125 transition-transform"></div>
-    <div className="sm:absolute left-0 top-6 text-sm font-semibold text-brand-400 w-28 text-left sm:text-right pr-8">{item.quarter}</div>
-    
-    <div className="bg-white dark:bg-slate-800/50 p-6 rounded-lg shadow-md border border-slate-200 dark:border-slate-700/50 group-hover:border-brand-500/50 transition-colors">
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-xl font-bold">{item.title}</h3>
-        <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-            item.status === 'In Progress' ? 'bg-yellow-500/10 text-yellow-400' :
-            item.status === 'Planned' ? 'bg-sky-500/10 text-sky-400' :
-            'bg-slate-500/10 text-slate-400'
-        }`}>{item.status}</span>
-      </div>
-      <p className="text-slate-600 dark:text-slate-300">{item.description}</p>
-    </div>
-  </div>
-);
+const statusColors = {
+  green: 'bg-green-500',
+  blue: 'bg-blue-500',
+  yellow: 'bg-yellow-500',
+  gray: 'bg-slate-500',
+}
 
+const statusTextColors = {
+  green: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+  blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+  yellow: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+  gray: 'bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300',
+}
 
 const FutureIntegrationPage: React.FC = () => {
   return (
     <div className="bg-slate-50 dark:bg-gray-900">
-       <PageHero 
-        title={<>What's <span className="text-brand-400">Next?</span></>} 
-        subtitle="Our roadmap for the future of private and secure communication." 
-      />
-
-      <main className="py-20 lg:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative">
-                {roadmapItems.map((item, index) => (
-                    <motion.div
-                        key={item.title}
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: index * 0.2 }}
-                    >
-                        <TimelineItem item={item} isLast={index === roadmapItems.length - 1} />
-                    </motion.div>
-                ))}
-            </div>
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-200/[0.05] dark:bg-grid-slate-700/[0.05] [mask-image:linear-gradient(to_bottom,white_50%,transparent_100%)]"></div>
+        <div className="max-w-7xl mx-auto py-20 sm:py-28 px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white"
+          >
+            What's Next for AltMail?
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-6 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400"
+          >
+            We're constantly working to build the future of private communication. Here's a look at our public roadmap.
+          </motion.p>
         </div>
-      </main>
+      </div>
 
+      <div className="max-w-3xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <div className="relative">
+          {/* Vertical line */}
+          <div className="absolute left-4 top-0 h-full w-0.5 bg-slate-200 dark:bg-slate-700" aria-hidden="true"></div>
+
+          <ul className="space-y-12">
+            {roadmapItems.map((item, index) => (
+              <motion.li
+                key={index}
+                className="relative pl-12"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className={`absolute left-0 top-1.5 w-8 h-8 rounded-full flex items-center justify-center`}>
+                  <div className={`absolute w-8 h-8 rounded-full ${statusColors[item.color as keyof typeof statusColors]} opacity-20`}></div>
+                  <div className={`w-3 h-3 rounded-full ${statusColors[item.color as keyof typeof statusColors]}`}></div>
+                </div>
+                
+                <div>
+                  <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${statusTextColors[item.color as keyof typeof statusTextColors]}`}>{item.status}</span>
+                  <h3 className="mt-3 text-2xl font-bold text-slate-800 dark:text-slate-100">{item.title}</h3>
+                  <p className="mt-2 text-slate-600 dark:text-slate-300">{item.description}</p>
+                </div>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      
       <Footer />
     </div>
   );

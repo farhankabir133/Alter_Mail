@@ -9,15 +9,12 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import DashboardPage from './pages/DashboardPage';
 import NotFoundPage from './pages/NotFoundPage';
-import { Navbar } from './components/layout/Navbar';
-
-// Import new pages
 import ServicesPage from './pages/ServicesPage';
 import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import APIPage from './pages/APIPage';
 import FutureIntegrationPage from './pages/FutureIntegrationPage';
-
+import { Navbar } from './components/layout/Navbar';
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -69,8 +66,6 @@ const AppContent: React.FC = () => {
             <Route path="/dashboard">
               <AnimatedRoute><DashboardPage /></AnimatedRoute>
             </Route>
-            
-            {/* Add routes for the new pages */}
             <Route path="/services">
               <AnimatedRoute><ServicesPage /></AnimatedRoute>
             </Route>
@@ -86,7 +81,6 @@ const AppContent: React.FC = () => {
             <Route path="/future">
               <AnimatedRoute><FutureIntegrationPage /></AnimatedRoute>
             </Route>
-
             <Route>
               <AnimatedRoute><NotFoundPage /></AnimatedRoute>
             </Route>

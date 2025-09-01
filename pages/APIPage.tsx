@@ -3,106 +3,98 @@ import { motion } from 'framer-motion';
 import { Footer } from '../components/layout/Footer';
 import { Button } from '../components/ui/Button';
 
-const PageHero = ({ title, subtitle }: { title: React.ReactNode, subtitle: string }) => (
-  <section className="relative text-center py-20 lg:py-28 px-4 bg-[#0a0f1f]">
-    <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(56,189,248,0.1)_0%,_rgba(10,15,31,0)_50%)]"></div>
-    <div className="relative z-10">
-      <motion.h1 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tighter"
-      >
-        {title}
-      </motion.h1>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2, ease: 'easeOut' }}
-        className="max-w-2xl mx-auto text-lg text-slate-300"
-      >
-        {subtitle}
-      </motion.p>
-    </div>
-  </section>
-);
-
 const CodeBlock = ({ children }: { children: React.ReactNode }) => (
-  <pre className="bg-slate-800 text-white p-4 rounded-lg overflow-x-auto text-sm font-mono relative">
-    <Button size="sm" variant="ghost" className="absolute top-2 right-2 !py-1 !px-2 text-xs">Copy</Button>
-    <code>
-      {children}
-    </code>
-  </pre>
+  <div className="bg-slate-800 dark:bg-black/50 rounded-lg overflow-hidden my-4">
+    <div className="bg-slate-700 dark:bg-slate-900/80 px-4 py-2 text-xs text-slate-300 font-mono flex justify-between items-center">
+      <span>bash</span>
+      <button className="text-xs font-semibold hover:text-white">Copy</button>
+    </div>
+    <pre className="p-4 text-sm text-slate-100 overflow-x-auto"><code>{children}</code></pre>
+  </div>
 );
 
 const APIPage: React.FC = () => {
   return (
     <div className="bg-slate-50 dark:bg-gray-900">
-      <PageHero 
-        title={<>Developer <span className="text-brand-400">API</span></>} 
-        subtitle="Integrate AltMail's powerful disposable email functionality into your applications." 
-      />
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-slate-200/[0.05] dark:bg-grid-slate-700/[0.05] [mask-image:linear-gradient(to_bottom,white_50%,transparent_100%)]"></div>
+        <div className="max-w-7xl mx-auto py-20 sm:py-28 px-4 sm:px-6 lg:px-8 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white"
+          >
+            Developer API
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-6 max-w-2xl mx-auto text-lg text-slate-600 dark:text-slate-400"
+          >
+            Integrate the power of AltMail directly into your applications. Simple, reliable, and built for developers.
+          </motion.p>
+        </div>
+      </div>
 
-      <main className="py-20 lg:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-            >
-                <h2 className="text-3xl font-bold tracking-tight mb-2">Getting Started</h2>
-                <p className="text-lg text-slate-600 dark:text-slate-300 mb-8">
-                    Our API is designed to be simple and intuitive. To get started, you'll need an API key from your Pro account dashboard. All requests should be authenticated using a Bearer token.
-                </p>
-                
-                <h3 className="text-2xl font-bold tracking-tight mt-12 mb-4">Endpoints</h3>
+      <div className="max-w-4xl mx-auto py-16 px-4 sm:px-6 lg:px-8 prose dark:prose-invert prose-slate lg:prose-lg">
+        <h2>Introduction</h2>
+        <p>
+          The AltMail API provides programmatic access to create and manage temporary email inboxes. It's a RESTful API that uses JSON for all requests and responses and standard HTTP verbs.
+        </p>
 
-                {/* Create Mailbox Endpoint */}
-                <div className="mb-12">
-                    <h4 className="text-xl font-semibold mb-2"><span className="font-mono text-sm px-2 py-1 rounded bg-green-500/10 text-green-400 mr-2">POST</span> /v1/mailboxes</h4>
-                    <p className="text-slate-500 dark:text-slate-400 mb-4">Creates a new disposable mailbox.</p>
-                    <h5 className="font-semibold mb-2">Example Request:</h5>
-                    <CodeBlock>
-{`curl -X POST https://api.altmail.dev/v1/mailboxes \\
--H "Authorization: Bearer YOUR_API_KEY"`}
-                    </CodeBlock>
-                     <h5 className="font-semibold mt-4 mb-2">Example Response:</h5>
-                    <CodeBlock>
+        <h2>Authentication</h2>
+        <p>
+          API access requires an API key, available to all Pro and Business plan subscribers. Include your API key in the `Authorization` header of every request.
+        </p>
+        <CodeBlock>
+          {`curl "https://api.altmail.dev/v1/inboxes" \\
+  -H "Authorization: Bearer YOUR_API_KEY"`}
+        </CodeBlock>
+
+        <hr/>
+
+        <h2>Endpoints</h2>
+        
+        <h3>Create a new Inbox</h3>
+        <p><span className="font-mono text-sm bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded">POST /v1/inboxes</span></p>
+        <p>Creates a new temporary email address. You can specify an optional custom domain if your plan supports it.</p>
+        
+        <h4>Response:</h4>
+        <CodeBlock>
 {`{
-  "id": "mb_1a2b3c4d5e",
-  "address": "random-alias@altmail.pro",
+  "id": "inbox_1a2b3c4d5e",
+  "address": "random-user@altmail.dev",
   "expiresAt": "2024-10-27T10:00:00Z"
 }`}
-                    </CodeBlock>
-                </div>
+        </CodeBlock>
+        
+        <h3>List Messages in Inbox</h3>
+        <p><span className="font-mono text-sm bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded">GET /v1/inboxes/:id/messages</span></p>
+        <p>Retrieves a list of all messages received by a specific inbox.</p>
+        
+        <h4>Response:</h4>
+        <CodeBlock>
+{`{
+  "data": [
+    {
+      "id": "msg_9x8y7z6w5v",
+      "from": "sender@example.com",
+      "subject": "Hello from AltMail",
+      "receivedAt": "2024-10-26T14:30:00Z"
+    }
+  ]
+}`}
+        </CodeBlock>
 
-                {/* Get Messages Endpoint */}
-                <div className="mb-12">
-                    <h4 className="text-xl font-semibold mb-2"><span className="font-mono text-sm px-2 py-1 rounded bg-sky-500/10 text-sky-400 mr-2">GET</span> /v1/mailboxes/{`{mailboxId}`}/messages</h4>
-                    <p className="text-slate-500 dark:text-slate-400 mb-4">Retrieves a list of messages for a given mailbox.</p>
-                    <h5 className="font-semibold mb-2">Example Request:</h5>
-                    <CodeBlock>
-{`curl https://api.altmail.dev/v1/mailboxes/mb_1a2b3c4d5e/messages \\
--H "Authorization: Bearer YOUR_API_KEY"`}
-                    </CodeBlock>
-                    <h5 className="font-semibold mt-4 mb-2">Example Response:</h5>
-                    <CodeBlock>
-{`[
-  {
-    "id": "msg_9z8y7x6w5v",
-    "from": "sender@example.com",
-    "subject": "Your verification code",
-    "receivedAt": "2024-10-27T09:30:00Z"
-  }
-]`}
-                    </CodeBlock>
-                </div>
-            </motion.div>
+        <div className="text-center mt-16">
+          <h3 className="text-2xl font-bold">Ready to get started?</h3>
+          <p className="mt-2">Upgrade to a Pro plan to get your API key today.</p>
+          <Button size="lg" className="mt-6">View Pricing</Button>
         </div>
-      </main>
-
+      </div>
+      
       <Footer />
     </div>
   );

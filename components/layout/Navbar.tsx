@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useRoute } from 'wouter';
+import { Link, useRoute, useLocation } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
@@ -23,6 +23,15 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [location] = useLocation();
+
+  // Simulate a logged-in state when on app or dashboard pages
+  const isLoggedIn = location.startsWith('/app') || location.startsWith('/dashboard');
+  
+  const user = {
+      name: 'Alex Doe',
+      avatarUrl: 'https://i.pravatar.cc/150?u=alexdoe'
+  };
 
   const navLinks = [
     { href: '/services', label: 'Services' },
@@ -36,6 +45,52 @@ export const Navbar: React.FC = () => {
     closed: { opacity: 0, y: -20, height: 0 },
     open: { opacity: 1, y: 0, height: 'auto' },
   };
+
+  const AuthButtons = () => {
+    if (isLoggedIn) {
+        return (
+            <Link href="/dashboard">
+                <a className="flex items-center space-x-3 group">
+                    <img src={user.avatarUrl} alt="User Avatar" className="w-9 h-9 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-brand-500 transition-colors" />
+                    <span className="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200 group-hover:text-brand-500 transition-colors">Dashboard</span>
+                </a>
+            </Link>
+        );
+    }
+    return (
+        <>
+            <Link href="/login">
+                <Button variant="ghost">Login</Button>
+            </Link>
+            <Link href="/signup">
+                <Button variant="primary">Sign Up</Button>
+            </Link>
+        </>
+    );
+  };
+  
+  const MobileAuthButtons = () => {
+    if (isLoggedIn) {
+        return (
+            <Link href="/dashboard">
+                <a onClick={() => setIsOpen(false)} className="flex items-center space-x-3 px-3 py-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
+                    <img src={user.avatarUrl} alt="User Avatar" className="w-8 h-8 rounded-full" />
+                    <span className="font-medium text-slate-700 dark:text-slate-200">View Dashboard</span>
+                </a>
+            </Link>
+        )
+    }
+    return (
+        <div className="flex items-center justify-center space-x-4">
+            <Link href="/login">
+                <Button variant="ghost" className="w-full">Login</Button>
+            </Link>
+            <Link href="/signup">
+                <Button variant="primary" className="w-full">Sign Up</Button>
+            </Link>
+        </div>
+    )
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-slate-200/50 dark:border-slate-800/50 transition-colors">
@@ -54,12 +109,7 @@ export const Navbar: React.FC = () => {
             ))}
           </nav>
           <div className="hidden md:flex items-center space-x-2">
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/signup">
-              <Button variant="primary">Sign Up</Button>
-            </Link>
+            <AuthButtons />
           </div>
           <div className="md:hidden flex items-center">
             <button
@@ -100,13 +150,8 @@ export const Navbar: React.FC = () => {
                   </a>
                 </Link>
               ))}
-              <div className="pt-4 mt-4 border-t border-slate-200/50 dark:border-slate-800/50 flex items-center justify-center space-x-4">
-                 <Link href="/login">
-                    <Button variant="ghost" className="w-full">Login</Button>
-                 </Link>
-                 <Link href="/signup">
-                    <Button variant="primary" className="w-full">Sign Up</Button>
-                 </Link>
+              <div className="pt-4 mt-4 border-t border-slate-200/50 dark:border-slate-800/50">
+                 <MobileAuthButtons />
               </div>
             </div>
           </motion.div>
