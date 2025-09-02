@@ -32,6 +32,9 @@ const CopyIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height
 const CheckIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>;
 const RefreshIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>;
 const ExtendIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14m-7-7h14"/></svg>;
+const SearchIcon = ({className = ''}) => <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
+const ChevronDownIcon = ({className = ''}) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>;
+const CloseIcon = ({className = ''}) => <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>;
 
 
 const EmailDisplay: React.FC<{ email: string }> = ({ email }) => {
@@ -118,74 +121,133 @@ const Timer: React.FC<{ expiresAt: string, onExtend: () => void, isExtending: bo
     );
 };
 
-
-const MessageView: React.FC<{ message: EmailMessage, onClose: () => void }> = ({ message, onClose }) => {
-    return (
-        <motion.div 
-            initial={{x: '100%'}} 
-            animate={{x: 0}} 
-            exit={{x: '100%'}} 
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="absolute inset-0 bg-white dark:bg-slate-900 p-4 sm:p-6 flex flex-col"
-        >
-            <div className="flex-shrink-0 pb-4 border-b border-slate-200 dark:border-slate-700">
-                <Button variant="ghost" size="sm" onClick={onClose} className="mb-4 -ml-4">&larr; Back to Inbox</Button>
-                <h2 className="text-2xl font-bold">{message.subject}</h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">From: {message.from}</p>
-            </div>
-            <div className="flex-grow mt-4 overflow-y-auto prose dark:prose-invert max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: message.body }} />
-            </div>
-        </motion.div>
-    );
-};
-
-
-const Inbox: React.FC<{ messages: EmailMessage[], isLoading: boolean }> = ({ messages, isLoading }) => {
-    const [selectedMessage, setSelectedMessage] = useState<EmailMessage | null>(null);
+const Inbox: React.FC<{ 
+    messages: EmailMessage[], 
+    isLoading: boolean,
+    searchQuery: string,
+    onSearchChange: (query: string) => void,
+    readMessageIds: Set<string>,
+    onMessageClick: (messageId: string) => void,
+    expandedMessageId: string | null
+}> = ({ messages, isLoading, searchQuery, onSearchChange, readMessageIds, onMessageClick, expandedMessageId }) => {
 
     const getInitials = (from: string) => from.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'S';
 
+    const filteredMessages = messages.filter(msg =>
+        msg.from.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        msg.subject.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
-        <Card className="mt-8 relative min-h-[400px] overflow-hidden p-0">
-             <AnimatePresence>
-                {selectedMessage ? (
-                    <MessageView message={selectedMessage} onClose={() => setSelectedMessage(null)} />
-                ) : (
-                    <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="p-6 sm:p-8">
-                        <h2 className="text-2xl font-bold mb-4">Inbox</h2>
-                        {isLoading && <p className="text-slate-500">Waiting for incoming emails...</p>}
-                        {!isLoading && messages.length === 0 && (
-                            <div className="text-center py-16">
-                                <IconMail className="mx-auto text-slate-300 dark:text-slate-600" />
-                                <p className="mt-4 font-semibold text-slate-600 dark:text-slate-400">Your inbox is empty</p>
-                                <p className="text-sm text-slate-400">New emails will appear here automatically.</p>
+        <Card className="mt-8 min-h-[400px] p-0">
+             <div className="p-6 sm:p-8">
+                <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
+                    <h2 className="text-2xl font-bold">Inbox</h2>
+                    <div className="relative w-full sm:max-w-xs">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <SearchIcon className="h-5 w-5 text-slate-400" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search by sender or subject..."
+                            value={searchQuery}
+                            onChange={(e) => onSearchChange(e.target.value)}
+                            className="w-full pl-10 pr-10 py-2 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition"
+                        />
+                        {searchQuery && (
+                            <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <button
+                                    onClick={() => onSearchChange('')}
+                                    className="p-1 rounded-full text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                                    aria-label="Clear search"
+                                >
+                                    <CloseIcon className="h-4 w-4" />
+                                </button>
                             </div>
                         )}
-                        <ul className="space-y-3">
-                            {messages.map(msg => (
-                                <motion.li 
-                                    key={msg.id}
-                                    layout
-                                    initial={{ opacity: 0, y: -20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, x: -30 }}
-                                    onClick={() => setSelectedMessage(msg)}
-                                    className="p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800/50 cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700 transition-colors flex items-center space-x-4"
+                    </div>
+                </div>
+
+                {isLoading && <p className="text-slate-500">Waiting for incoming emails...</p>}
+                
+                {!isLoading && messages.length === 0 && (
+                    <div className="text-center py-16">
+                        <IconMail className="mx-auto text-slate-300 dark:text-slate-600" />
+                        <p className="mt-4 font-semibold text-slate-600 dark:text-slate-400">Your inbox is empty</p>
+                        <p className="text-sm text-slate-400">New emails will appear here automatically.</p>
+                    </div>
+                )}
+                
+                {!isLoading && filteredMessages.length === 0 && messages.length > 0 && (
+                     <div className="text-center py-16">
+                        <p className="mt-4 font-semibold text-slate-600 dark:text-slate-400">No messages found</p>
+                        <p className="text-sm text-slate-400">Your search for "{searchQuery}" did not return any results.</p>
+                    </div>
+                )}
+
+                <ul className="space-y-2">
+                    <AnimatePresence>
+                        {filteredMessages.map(msg => {
+                            const isRead = readMessageIds.has(msg.id);
+                            const isExpanded = expandedMessageId === msg.id;
+                            return (
+                            <motion.li 
+                                key={msg.id}
+                                layout="position"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/60 overflow-hidden"
+                            >
+                                <div 
+                                    onClick={() => onMessageClick(msg.id)}
+                                    className="p-3 cursor-pointer flex items-center space-x-4"
                                 >
-                                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-indigo-200 to-sky-200 dark:from-indigo-800 dark:to-sky-800 flex items-center justify-center font-bold text-indigo-700 dark:text-sky-200">
-                                      {getInitials(msg.from)}
+                                    <div className="relative flex-shrink-0">
+                                        {!isRead && (
+                                            <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-brand-500 rounded-full" aria-label="Unread message"></div>
+                                        )}
+                                        <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-indigo-200 to-sky-200 dark:from-indigo-800 dark:to-sky-800 flex items-center justify-center font-bold text-indigo-700 dark:text-sky-200 ${isRead ? 'opacity-60' : ''}`}>
+                                          {getInitials(msg.from)}
+                                        </div>
                                     </div>
-                                    <div className="overflow-hidden">
-                                      <p className="font-semibold truncate">{msg.subject}</p>
+                                    <div className={`overflow-hidden flex-grow ${isRead ? 'opacity-70' : ''}`}>
+                                      <p className={`truncate ${isRead ? 'font-medium text-slate-600 dark:text-slate-300' : 'font-bold text-slate-800 dark:text-slate-100'}`}>{msg.subject}</p>
                                       <p className="text-sm text-slate-500 dark:text-slate-400 truncate">From: {msg.from}</p>
                                     </div>
-                                </motion.li>
-                            ))}
-                        </ul>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                                    <motion.div
+                                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <ChevronDownIcon className="text-slate-400" />
+                                    </motion.div>
+                                </div>
+                                <AnimatePresence>
+                                {isExpanded && (
+                                    <motion.div
+                                        key="content"
+                                        initial="collapsed"
+                                        animate="open"
+                                        exit="collapsed"
+                                        variants={{
+                                            open: { opacity: 1, height: 'auto' },
+                                            collapsed: { opacity: 0, height: 0 }
+                                        }}
+                                        transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                                        className="overflow-hidden"
+                                    >
+                                        <div className="px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-700/60">
+                                             <div className="prose dark:prose-invert prose-sm max-w-none text-slate-600 dark:text-slate-300" dangerouslySetInnerHTML={{ __html: msg.body }} />
+                                        </div>
+                                    </motion.div>
+                                )}
+                                </AnimatePresence>
+                            </motion.li>
+                            )
+                        })}
+                    </AnimatePresence>
+                </ul>
+            </div>
         </Card>
     );
 };
@@ -227,12 +289,19 @@ const IconMail = ({className = ''}) => <svg xmlns="http://www.w3.org/2000/svg" w
 const AppPage: React.FC = () => {
   const [mailbox, setMailbox] = useState<Mailbox | null>(null);
   const [messages, setMessages] = useState<EmailMessage[]>([]);
+  const [readMessageIds, setReadMessageIds] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedMessageId, setExpandedMessageId] = useState<string | null>(null);
+
 
   const newEmailMutation = useMutation<Mailbox, Error>({
     mutationFn: createNewEmail,
     onSuccess: (data) => {
       setMailbox(data);
       setMessages([]);
+      setReadMessageIds(new Set());
+      setSearchQuery('');
+      setExpandedMessageId(null);
     },
   });
 
@@ -290,6 +359,11 @@ const AppPage: React.FC = () => {
     newEmailMutation.mutate();
   }
 
+  const handleMessageClick = (messageId: string) => {
+    setReadMessageIds(prev => new Set(prev).add(messageId));
+    setExpandedMessageId(prevId => (prevId === messageId ? null : messageId));
+  };
+
   return (
     <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       {newEmailMutation.isPending && <SkeletonLoader />}
@@ -309,7 +383,15 @@ const AppPage: React.FC = () => {
             />
           </Card>
 
-          <Inbox messages={messages} isLoading={!messages.length && !newEmailMutation.isSuccess} />
+          <Inbox 
+            messages={messages} 
+            isLoading={!messages.length && !newEmailMutation.isSuccess}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            readMessageIds={readMessageIds}
+            onMessageClick={handleMessageClick}
+            expandedMessageId={expandedMessageId}
+          />
           
         </motion.div>
       )}

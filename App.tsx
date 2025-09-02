@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Router, Route, Switch, useLocation } from 'wouter';
 import { useHashLocation } from './hooks/useHashLocation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,6 +14,9 @@ import PricingPage from './pages/PricingPage';
 import AboutPage from './pages/AboutPage';
 import APIPage from './pages/APIPage';
 import FutureIntegrationPage from './pages/FutureIntegrationPage';
+import ChangelogPage from './pages/ChangelogPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import { Navbar } from './components/layout/Navbar';
 
 const pageVariants = {
@@ -42,8 +45,12 @@ const AnimatedRoute = ({ children }: { children: React.ReactNode }) => (
 
 const AppContent: React.FC = () => {
   const [location] = useLocation();
-  const noNavRoutes = ['/login', '/signup', '/dashboard'];
+  const noNavRoutes = ['/login', '/signup', '/dashboard', '/forgot-password', '/reset-password'];
   const showNavbar = !noNavRoutes.some(route => location.startsWith(route));
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-gray-900">
@@ -80,6 +87,15 @@ const AppContent: React.FC = () => {
             </Route>
             <Route path="/future">
               <AnimatedRoute><FutureIntegrationPage /></AnimatedRoute>
+            </Route>
+            <Route path="/showcase">
+              <AnimatedRoute><ChangelogPage /></AnimatedRoute>
+            </Route>
+            <Route path="/forgot-password">
+              <AnimatedRoute><ForgotPasswordPage /></AnimatedRoute>
+            </Route>
+            <Route path="/reset-password">
+              <AnimatedRoute><ResetPasswordPage /></AnimatedRoute>
             </Route>
             <Route>
               <AnimatedRoute><NotFoundPage /></AnimatedRoute>

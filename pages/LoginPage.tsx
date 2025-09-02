@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Logo } from '../components/ui/Logo';
+import { InputField } from '../components/ui/InputField';
 
 // Mock API call
 const loginUser = async (credentials: {email: string, password: string}) => {
@@ -35,6 +36,7 @@ const LoginPage: React.FC = () => {
     const [, setLocation] = useLocation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [emailError, setEmailError] = useState('');
     const [isGoogleLoading, setGoogleLoading] = useState(false);
 
     const mutation = useMutation({
@@ -58,6 +60,11 @@ const LoginPage: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        setEmailError('');
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            setEmailError('Please enter a valid email address.');
+            return;
+        }
         mutation.mutate({ email, password });
     };
 
@@ -72,19 +79,40 @@ const LoginPage: React.FC = () => {
                     <h2 className="text-2xl font-bold text-center mb-1 text-slate-800 dark:text-slate-100">Welcome Back</h2>
                     <p className="text-center text-slate-500 dark:text-slate-400 mb-6">Sign in to continue to AltMail</p>
                     
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div>
-                            <label className="text-sm font-medium">Email Address</label>
-                            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full mt-1 p-3 border rounded-lg bg-slate-50 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition" />
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <InputField
+                            label="Email Address"
+                            type="email"
+                            name="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            error={emailError}
+                            required
+                        />
+                         <InputField
+                            label="Password"
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                        />
+                        
+                        <div className="flex items-center justify-end text-sm">
+                          <Link href="/forgot-password">
+                            <a className="font-semibold text-brand-500 hover:text-brand-600 dark:hover:text-brand-400 transition-colors">
+                              Forgot your password?
+                            </a>
+                          </Link>
                         </div>
-                        <div>
-                            <label className="text-sm font-medium">Password</label>
-                            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full mt-1 p-3 border rounded-lg bg-slate-50 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition" />
-                        </div>
+
                         {mutation.isError && <p className="text-red-500 text-sm text-center">Error: {mutation.error.message}</p>}
-                        <Button type="submit" className="w-full !py-3" isLoading={mutation.isPending}>
-                            Login
-                        </Button>
+                        
+                        <div className="pt-2">
+                            <Button type="submit" className="w-full !py-3" isLoading={mutation.isPending}>
+                                Login
+                            </Button>
+                        </div>
                     </form>
 
                     <div className="relative my-6">

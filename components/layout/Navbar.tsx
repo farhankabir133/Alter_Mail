@@ -38,7 +38,8 @@ export const Navbar: React.FC = () => {
     { href: '/pricing', label: 'Pricing' },
     { href: '/about', label: 'About' },
     { href: '/api', label: 'API' },
-    { href: '/future', label: 'Future Integration' },
+    { href: '/future', label: 'Future' },
+    { href: '/showcase', label: 'Showcase' },
   ];
 
   const menuVariants = {
