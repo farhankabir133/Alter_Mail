@@ -1,3 +1,6 @@
+
+---
+
 ````markdown
 <div align="center">
   <img width="1200" height="475" alt="AltMail Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
@@ -131,3 +134,7 @@ Open for contributions that align with our privacy-first vision.
   <sub>© 2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir</a> — Frontend & Backend.</sub>
 </div>
 ```
+
+---
+
+This version keeps:
