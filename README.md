@@ -40,7 +40,7 @@ AltMail provides **simple, accessible tools** for online anonymity — giving yo
 
 ## 💡 Our Story
 
-Founded in **2023**, AltMail began as a small side project to stop spam from taking over our inboxes.  
+Founded in **2025**, AltMail began as a small side project to stop spam from taking over our inboxes.  
 We were tired of giving away our real email addresses just to try new services.
 
 That frustration turned into a passion for **digital privacy**.  
