@@ -69,7 +69,7 @@ Want to explore or contribute? Here’s how to get started:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/altmail.git
+git clone https://github.com/farhankabir133/Alter_Mail.git
 cd altmail
 ````
 
@@ -109,7 +109,7 @@ View the deployed app in AI Studio:
 * **Frontend:** Next.js, React, Tailwind CSS
 * **Backend:** Node.js, Express, Gemini API
 * **Hosting:** Google Firebase
-* **Developer:** [Farhan Kabir Eshad](https://farhankabir.web.app/)
+* **Developer:** [Farhan Kabir](https://farhankabir.web.app/)
 
 ---
 
