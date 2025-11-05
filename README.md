@@ -1,4 +1,7 @@
-
+````markdown
+<div align="center">
+  <img width="1200" height="475" alt="AltMail Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
 
 <h1 align="center">AltMail — Privacy, Reinvented</h1>
 
@@ -38,7 +41,7 @@ AltMail provides **simple, accessible tools** for online anonymity — giving yo
 
 ## 💡 Our Story
 
-Founded in **2025**, AltMail began as a small side project to stop spam from taking over our inboxes.  
+Founded in **2023**, AltMail began as a small side project to stop spam from taking over our inboxes.  
 We were tired of giving away our real email addresses just to try new services.
 
 That frustration turned into a passion for **digital privacy**.  
@@ -68,3 +71,66 @@ Want to explore or contribute? Here’s how to get started:
 ```bash
 git clone https://github.com/your-username/altmail.git
 cd altmail
+````
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env.local` file in the project root and add:
+
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+Now open [http://localhost:3000](http://localhost:3000) to view your app.
+
+---
+
+## 🚀 View on AI Studio
+
+View the deployed app in AI Studio:
+[https://ai.studio/apps/drive/10RfNIFDPb0plnFoXNm3J1Wo1_hRzJP-k](https://ai.studio/apps/drive/10RfNIFDPb0plnFoXNm3J1Wo1_hRzJP-k)
+
+---
+
+## 🧠 Tech Stack
+
+* **Frontend:** Next.js, React, Tailwind CSS
+* **Backend:** Node.js, Express, Gemini API
+* **Hosting:** Google Firebase
+* **Developer:** [Farhan Kabir Eshad](https://farhankabir.web.app/)
+
+---
+
+## 🧩 SEO Metadata
+
+**Keywords:** AltMail, disposable email, anonymous email, spam protection, digital privacy, temporary inbox, data protection, email alias, privacy tool, Farhan Kabir
+**Description:** AltMail provides disposable, anonymous email addresses that protect your privacy and keep your inbox clean. Built by Farhan Kabir using Node.js, Next.js, and Gemini API.
+
+---
+
+## 🛡️ License
+
+This project is licensed under the [MIT License](LICENSE).
+Open for contributions that align with our privacy-first vision.
+
+---
+
+<div align="center">
+  <sub>© 2023–2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir Eshad</a> — Frontend & Backend.</sub>
+</div>
+```
+
+---
+
