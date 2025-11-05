@@ -113,4 +113,5 @@ This project is licensed under the MIT License
 .
 Open for contributions that align with our privacy-first vision.
 
-<div align="center"> <sub>© 2023–2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir Eshad</a> — Frontend & Backend.</sub> </div> ```
+<div align="center"> <sub>© 2023–2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir Eshad</a> — Frontend & Backend.</sub> </div>
+```
