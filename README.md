@@ -1,7 +1,3 @@
-Here’s your upgraded **production-ready, SEO-optimized README** — now polished for GitHub discovery, with badges, search-friendly metadata, and your portfolio site linked as the engineer behind both frontend and backend:
-
----
-
 ````markdown
 <div align="center">
   <img width="1200" height="475" alt="AltMail Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
