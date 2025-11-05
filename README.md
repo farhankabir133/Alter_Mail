@@ -1,4 +1,3 @@
-````markdown
 <div align="center">
   <img width="1200" height="475" alt="AltMail Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
@@ -71,66 +70,47 @@ Want to explore or contribute? Here’s how to get started:
 ```bash
 git clone https://github.com/your-username/altmail.git
 cd altmail
-````
 
-### 2. Install dependencies
-
-```bash
+2. Install dependencies
 npm install
-```
 
-### 3. Configure environment variables
+3. Configure environment variables
 
-Create a `.env.local` file in the project root and add:
+Create a .env.local file in the project root and add:
 
-```
 GEMINI_API_KEY=your_api_key_here
-```
 
-### 4. Start the development server
-
-```bash
+4. Start the development server
 npm run dev
-```
 
-Now open [http://localhost:3000](http://localhost:3000) to view your app.
 
----
+Now open http://localhost:3000
+ to view your app.
 
-## 🚀 View on AI Studio
+🚀 View on AI Studio
 
 View the deployed app in AI Studio:
-[https://ai.studio/apps/drive/10RfNIFDPb0plnFoXNm3J1Wo1_hRzJP-k](https://ai.studio/apps/drive/10RfNIFDPb0plnFoXNm3J1Wo1_hRzJP-k)
+https://ai.studio/apps/drive/10RfNIFDPb0plnFoXNm3J1Wo1_hRzJP-k
 
----
+🧠 Tech Stack
 
-## 🧠 Tech Stack
+Frontend: Next.js, React, Tailwind CSS
 
-* **Frontend:** Next.js, React, Tailwind CSS
-* **Backend:** Node.js, Express, Gemini API
-* **Hosting:** Google Firebase
-* **Developer:** [Farhan Kabir Eshad](https://farhankabir.web.app/)
+Backend: Node.js, Express, Gemini API
 
----
+Hosting: Google Firebase
 
-## 🧩 SEO Metadata
+Developer: Farhan Kabir Eshad
 
-**Keywords:** AltMail, disposable email, anonymous email, spam protection, digital privacy, temporary inbox, data protection, email alias, privacy tool, Farhan Kabir
-**Description:** AltMail provides disposable, anonymous email addresses that protect your privacy and keep your inbox clean. Built by Farhan Kabir using Node.js, Next.js, and Gemini API.
+🧩 SEO Metadata
 
----
+Keywords: AltMail, disposable email, anonymous email, spam protection, digital privacy, temporary inbox, data protection, email alias, privacy tool, Farhan Kabir
+Description: AltMail provides disposable, anonymous email addresses that protect your privacy and keep your inbox clean. Built by Farhan Kabir using Node.js, Next.js, and Gemini API.
 
-## 🛡️ License
+🛡️ License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the MIT License
+.
 Open for contributions that align with our privacy-first vision.
 
----
-
-<div align="center">
-  <sub>© 2023–2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir Eshad</a> — Frontend & Backend.</sub>
-</div>
-```
-
----
-
+<div align="center"> <sub>© 2023–2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir Eshad</a> — Frontend & Backend.</sub> </div> ```
