@@ -1,12 +1,16 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 
-interface ButtonProps extends HTMLMotionProps<'button'> {
+// FIX: Changed from interface extension to a type alias with an intersection (&).
+// This correctly merges the custom props with all standard button attributes from
+// HTMLMotionProps, resolving numerous type errors across the application where
+// props like 'className', 'onClick', and 'type' were not recognized.
+type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'ghost';
   children: React.ReactNode;
   isLoading?: boolean;
   size?: 'sm' | 'md' | 'lg';
-}
+} & HTMLMotionProps<'button'>;
 
 export const Button: React.FC<ButtonProps> = ({ children, variant = 'primary', isLoading = false, size = 'md', className = '', ...props }) => {
   const baseClasses = "rounded-lg font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center space-x-2 shadow-sm";

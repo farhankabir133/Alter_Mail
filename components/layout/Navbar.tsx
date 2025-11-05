@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useRoute, useLocation } from 'wouter';
+import { Link, useRoute } from 'wouter';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Logo } from '../ui/Logo';
 import { Button } from '../ui/Button';
+import { useAuth } from '../../contexts/AuthContext';
 
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
   const [isActive] = useRoute(href);
@@ -23,15 +24,7 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [location] = useLocation();
-
-  // Simulate a logged-in state when on app or dashboard pages
-  const isLoggedIn = location.startsWith('/app') || location.startsWith('/dashboard');
-  
-  const user = {
-      name: 'Alex Doe',
-      avatarUrl: 'https://i.pravatar.cc/150?u=alexdoe'
-  };
+  const { user } = useAuth();
 
   const navLinks = [
     { href: '/services', label: 'Services' },
@@ -48,11 +41,12 @@ export const Navbar: React.FC = () => {
   };
 
   const AuthButtons = () => {
-    if (isLoggedIn) {
+    if (user) {
+        const avatarSrc = user.picture || `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`;
         return (
             <Link href="/dashboard">
                 <a className="flex items-center space-x-3 group">
-                    <img src={user.avatarUrl} alt="User Avatar" className="w-9 h-9 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-brand-500 transition-colors" />
+                    <img src={avatarSrc} alt={user.name} className="w-9 h-9 rounded-full border-2 border-slate-300 dark:border-slate-600 group-hover:border-brand-500 transition-colors" />
                     <span className="hidden sm:inline text-sm font-medium text-slate-700 dark:text-slate-200 group-hover:text-brand-500 transition-colors">Dashboard</span>
                 </a>
             </Link>
@@ -71,11 +65,12 @@ export const Navbar: React.FC = () => {
   };
   
   const MobileAuthButtons = () => {
-    if (isLoggedIn) {
+    if (user) {
+        const avatarSrc = user.picture || `https://api.dicebear.com/7.x/initials/svg?seed=${user.name}`;
         return (
             <Link href="/dashboard">
                 <a onClick={() => setIsOpen(false)} className="flex items-center space-x-3 px-3 py-3 rounded-md hover:bg-slate-100 dark:hover:bg-slate-800">
-                    <img src={user.avatarUrl} alt="User Avatar" className="w-8 h-8 rounded-full" />
+                    <img src={avatarSrc} alt={user.name} className="w-8 h-8 rounded-full" />
                     <span className="font-medium text-slate-700 dark:text-slate-200">View Dashboard</span>
                 </a>
             </Link>
@@ -84,10 +79,10 @@ export const Navbar: React.FC = () => {
     return (
         <div className="flex items-center justify-center space-x-4">
             <Link href="/login">
-                <Button variant="ghost" className="w-full">Login</Button>
+                <Button variant="ghost" className="w-full" onClick={() => setIsOpen(false)}>Login</Button>
             </Link>
             <Link href="/signup">
-                <Button variant="primary" className="w-full">Sign Up</Button>
+                <Button variant="primary" className="w-full" onClick={() => setIsOpen(false)}>Sign Up</Button>
             </Link>
         </div>
     )

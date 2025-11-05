@@ -83,19 +83,19 @@ const SearchIcon = ({ className = '' }) => <svg xmlns="http://www.w3.org/2000/sv
 const ChevronDownIcon = ({ className = '' }) => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="6 9 12 15 18 9"></polyline></svg>;
 const CloseIcon = ({className = ''}) => <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>;
 
-// --- Mock Data ---
+// --- Mock Data (FIXED to match EmailMessage interface) ---
 const mockMessages: EmailMessage[] = [
-    { id: '1', from: 'Framer', subject: 'Magic Motion is here!', body: '<p>Discover the future of web animations. With just one click, you can create seamless transitions and delightful interactions. <strong>Try it now!</strong></p>', receivedAt: new Date().toISOString() },
-    { id: '2', from: 'Vercel', subject: 'Your latest deployment was successful', body: '<p>Your project <code>altmail-clone</code> has been successfully deployed. You can view it live at your domain.</p>', receivedAt: new Date().toISOString() },
-    { id: '3', from: 'Stripe', subject: 'Welcome to Stripe!', body: '<p>Thanks for signing up for Stripe. We\'re excited to help you manage your payments. Get started by creating your first product.</p>', receivedAt: new Date().toISOString() },
-    { id: '4', from: 'Linear', subject: '[ALT-123] New comment on "Design System Update"', body: '<p>Jane Doe mentioned you in a comment: <em>"Hey, can you take a look at the new button component specs?"</em></p>', receivedAt: new Date().toISOString() },
+    { id: '1', from: { name: 'Framer', address: 'updates@framer.com' }, subject: 'Magic Motion is here!', intro: 'Discover the future of web animations...', seen: false, createdAt: new Date().toISOString(), htmlBody: '<p>Discover the future of web animations. With just one click, you can create seamless transitions and delightful interactions. <strong>Try it now!</strong></p>' },
+    { id: '2', from: { name: 'Vercel', address: 'noreply@vercel.com' }, subject: 'Your latest deployment was successful', intro: 'Your project altmail-clone has been successfully deployed.', seen: false, createdAt: new Date().toISOString(), htmlBody: '<p>Your project <code>altmail-clone</code> has been successfully deployed. You can view it live at your domain.</p>' },
+    { id: '3', from: { name: 'Stripe', address: 'support@stripe.com' }, subject: 'Welcome to Stripe!', intro: 'Thanks for signing up for Stripe...', seen: true, createdAt: new Date().toISOString(), htmlBody: '<p>Thanks for signing up for Stripe. We\'re excited to help you manage your payments. Get started by creating your first product.</p>' },
+    { id: '4', from: { name: 'Linear', address: 'notifications@linear.app' }, subject: '[ALT-123] New comment on "Design System Update"', intro: 'Jane Doe mentioned you in a comment...', seen: false, createdAt: new Date().toISOString(), htmlBody: '<p>Jane Doe mentioned you in a comment: <em>"Hey, can you take a look at the new button component specs?"</em></p>' },
 ];
 
 
 const ChangelogPage: React.FC = () => {
     // State for Inbox Demo
     const [searchQuery, setSearchQuery] = useState('');
-    const [readMessageIds, setReadMessageIds] = useState<Set<string>>(new Set());
+    const [readMessageIds, setReadMessageIds] = useState<Set<string>>(new Set(['3']));
     const [expandedMessageId, setExpandedMessageId] = useState<string | null>(null);
 
     // State for Form Demo
@@ -130,12 +130,14 @@ const ChangelogPage: React.FC = () => {
         setReadMessageIds(prev => new Set(prev).add(messageId));
     };
     
-    const getInitials = (from: string) => from.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'S';
+    const getInitials = (name: string) => name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase() || 'S';
 
-    const filteredMessages = mockMessages.filter(msg =>
-        msg.from.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        msg.subject.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // FIX: Updated filtering logic to search within the 'from' object's 'name' and 'address' properties.
+    const filteredMessages = mockMessages.filter(msg => {
+        const fromText = `${msg.from?.name || ''} ${msg.from?.address || ''}`.toLowerCase();
+        return fromText.includes(searchQuery.toLowerCase()) ||
+               msg.subject.toLowerCase().includes(searchQuery.toLowerCase())
+    });
 
     const handleFormSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -203,6 +205,8 @@ const ChangelogPage: React.FC = () => {
                                     {filteredMessages.map(msg => {
                                         const isRead = readMessageIds.has(msg.id);
                                         const isExpanded = expandedMessageId === msg.id;
+                                        const senderName = msg.from?.name || msg.from?.address || 'Unknown Sender';
+                                        const senderAddress = msg.from?.address || 'no-reply@unknown.com';
                                         return (
                                         <motion.li 
                                             key={msg.id}
@@ -221,12 +225,12 @@ const ChangelogPage: React.FC = () => {
                                                         <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-brand-500 rounded-full" aria-label="Unread message"></div>
                                                     )}
                                                     <div className={`w-10 h-10 rounded-full bg-gradient-to-br from-indigo-200 to-sky-200 dark:from-indigo-800 dark:to-sky-800 flex items-center justify-center font-bold text-indigo-700 dark:text-sky-200 ${isRead ? 'opacity-60' : ''}`}>
-                                                        {getInitials(msg.from)}
+                                                        {getInitials(senderName)}
                                                     </div>
                                                 </div>
                                                 <div className={`overflow-hidden flex-grow ${isRead ? 'opacity-70' : ''}`}>
                                                     <p className={`truncate ${isRead ? 'font-medium text-slate-600 dark:text-slate-300' : 'font-bold text-slate-800 dark:text-slate-100'}`}>{msg.subject}</p>
-                                                    <p className="text-sm text-slate-500 dark:text-slate-400 truncate">From: {msg.from}</p>
+                                                    <p className="text-sm text-slate-500 dark:text-slate-400 truncate" title={senderAddress}>From: {senderName}</p>
                                                 </div>
                                                 <motion.div
                                                     animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -250,7 +254,7 @@ const ChangelogPage: React.FC = () => {
                                                     className="overflow-hidden"
                                                 >
                                                     <div className="px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-700/60">
-                                                        <div className="prose dark:prose-invert prose-sm max-w-none text-slate-600 dark:text-slate-300" dangerouslySetInnerHTML={{ __html: msg.body }} />
+                                                        <div className="prose dark:prose-invert prose-sm max-w-none text-slate-600 dark:text-slate-300" dangerouslySetInnerHTML={{ __html: msg.htmlBody || '' }} />
                                                     </div>
                                                 </motion.div>
                                             )}

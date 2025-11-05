@@ -1,71 +1,55 @@
 import React, { useState } from 'react';
-import { useLocation, Link } from 'wouter';
-import { useMutation } from '@tanstack/react-query';
+import { useLocation, Link, Redirect } from 'wouter';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Logo } from '../components/ui/Logo';
 import { InputField } from '../components/ui/InputField';
-
-// Mock API call
-const signupUser = async (details: {email: string, password: string}) => {
-    console.log('Signing up with:', details);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    if (details.email.includes('@')) {
-        return { message: 'User created successfully' };
-    }
-    throw new Error('Invalid email');
-};
-
-const mockGoogleSignup = async () => {
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    return { token: 'fake-google-jwt-token', user: { name: 'New Google User' } };
-};
-
-const GoogleIcon = () => (
-  <svg className="w-5 h-5" viewBox="0 0 48 48">
-    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"></path>
-    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"></path>
-    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.519-3.487-11.187-8.264l-6.522,5.025C9.505,39.556,16.227,44,24,44z"></path>
-    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.999,35.986,44,30.613,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
-  </svg>
-);
+import { useAuth } from '../contexts/AuthContext';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 
 const SignupPage: React.FC = () => {
     const [, setLocation] = useLocation();
+    const { isAuthenticated, loginWithGoogle, signup, isLoading: isAuthLoading } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [emailError, setEmailError] = useState('');
-    const [isGoogleLoading, setGoogleLoading] = useState(false);
-    
-    const mutation = useMutation({
-        mutationFn: signupUser,
-        onSuccess: () => {
-            // Redirect to login after successful signup
-            setLocation('/login');
-        }
-    });
+    const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleGoogleSignUp = async () => {
-        setGoogleLoading(true);
-        try {
-            await mockGoogleSignup();
-            setLocation('/dashboard'); // Go straight to dashboard on successful Google signup
-        } catch (error) {
-            console.error("Google sign-up failed", error);
-        } finally {
-            setGoogleLoading(false);
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+        if (credentialResponse.credential) {
+            setIsSubmitting(true);
+            setError('');
+            try {
+                await loginWithGoogle(credentialResponse.credential);
+                setLocation('/dashboard');
+            } catch (err: any) {
+                setError(err.message || "Failed to sign up with Google.");
+                setIsSubmitting(false);
+            }
         }
-    }
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setEmailError('');
-        if (!/\S+@\S+\.\S+/.test(email)) {
-            setEmailError('Please enter a valid email address.');
-            return;
-        }
-        mutation.mutate({ email, password });
     };
+
+    const handleGoogleError = () => {
+        setError("Google sign-up was unsuccessful. Please try again.");
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setIsSubmitting(true);
+        try {
+            await signup(email, password);
+            // Redirect to the verification page after successful signup
+            setLocation(`/verify-email?email=${encodeURIComponent(email)}`);
+        } catch (err: any) {
+            setError(err.message || 'An unknown error occurred.');
+            setIsSubmitting(false);
+        }
+    };
+
+    if (isAuthenticated) {
+        return <Redirect to="/dashboard" />;
+    }
 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-slate-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -85,8 +69,7 @@ const SignupPage: React.FC = () => {
                             name="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
-                            error={emailError}
-                            required
+                            disabled={isSubmitting || isAuthLoading}
                         />
                          <InputField
                             label="Password"
@@ -94,13 +77,13 @@ const SignupPage: React.FC = () => {
                             name="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
-                            required
+                            disabled={isSubmitting || isAuthLoading}
                         />
-                        {mutation.isSuccess && <p className="text-green-500 text-sm text-center">Account created! Redirecting to login...</p>}
-                        {mutation.isError && <p className="text-red-500 text-sm text-center">Error: {mutation.error.message}</p>}
+                        
+                        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
                         
                         <div className="pt-2">
-                            <Button type="submit" className="w-full !py-3" isLoading={mutation.isPending}>
+                            <Button type="submit" className="w-full !py-3" isLoading={isSubmitting || isAuthLoading}>
                                 Create Account
                             </Button>
                         </div>
@@ -115,11 +98,15 @@ const SignupPage: React.FC = () => {
                       </div>
                     </div>
 
-                    <div>
-                      <Button variant="secondary" className="w-full !py-3" onClick={handleGoogleSignUp} isLoading={isGoogleLoading}>
-                          <GoogleIcon />
-                          <span className="ml-3">Sign up with Google</span>
-                      </Button>
+                    <div className="flex justify-center">
+                        {!(isSubmitting || isAuthLoading) && <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleError}
+                            theme="outline"
+                            size="large"
+                            shape="pill"
+                            width="300px"
+                        />}
                     </div>
 
                     <p className="text-center text-sm mt-8">
