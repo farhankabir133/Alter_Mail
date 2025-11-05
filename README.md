@@ -1,7 +1,3 @@
-
----
-
-````markdown
 <div align="center">
   <img width="1200" height="475" alt="AltMail Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
@@ -72,9 +68,9 @@ Want to explore or contribute? Here’s how to get started:
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/altmail.git
-cd altmail
-````
+git clone https://github.com/farhankabir133/Alter_Mail.git
+cd Alter_Mail
+```
 
 ### 2. Install dependencies
 
@@ -118,14 +114,14 @@ View the deployed app in AI Studio:
 
 ## 🧩 SEO Metadata
 
-**Keywords:** AltMail, disposable email, anonymous email, spam protection, digital privacy, temporary inbox, data protection, email alias, privacy tool, Farhan Kabir
+**Keywords:** AltMail, disposable email, anonymous email, spam protection, digital privacy, temporary inbox, data protection, email alias, privacy tool, Farhan Kabir  
 **Description:** AltMail provides disposable, anonymous email addresses that protect your privacy and keep your inbox clean. Built by Farhan Kabir using Node.js, Next.js, and Gemini API.
 
 ---
 
 ## 🛡️ License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).  
 Open for contributions that align with our privacy-first vision.
 
 ---
@@ -133,8 +129,3 @@ Open for contributions that align with our privacy-first vision.
 <div align="center">
   <sub>© 2025 AltMail. Engineered with care by <a href="https://farhankabir.web.app/">Farhan Kabir</a> — Frontend & Backend.</sub>
 </div>
-```
-
----
-
-This version keeps:
