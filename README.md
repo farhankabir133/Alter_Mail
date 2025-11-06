@@ -26,13 +26,13 @@
 > Simple. Secure. Anonymous email for a safer online experience.
 
 **AltMail** is a privacy-first platform that lets users generate disposable and anonymous emails.  
-It’s built to stop spam, protect personal data, and make online sign-ups clean and worry-free.
+It's built to stop spam, protect personal data, and make online sign-ups clean and worry-free.
 
 ---
 
 ## 🌍 Our Mission
 
-We’re on a mission to protect your privacy.  
+We're on a mission to protect your privacy.  
 Everyone deserves a digital life free from surveillance and clutter.  
 AltMail provides **simple, accessible tools** for online anonymity — giving you back control over your personal information.
 
@@ -61,7 +61,7 @@ Now, AltMail serves **thousands of users worldwide**, offering reliable anonymou
 
 ## ⚙️ Run Locally
 
-Want to explore or contribute? Here’s how to get started:
+Want to explore or contribute? Here's how to get started:
 
 **Prerequisites:**  
 - [Node.js](https://nodejs.org/) (Latest LTS recommended)
